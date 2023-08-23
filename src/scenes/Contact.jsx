@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '../hooks/useMediaQuery';
 
-import { motion } from 'framer-motion'
+import { delay, motion } from 'framer-motion'
 import { SiWhatsapp } from "react-icons/si";
 import { SlCallOut, SlLocationPin } from "react-icons/sl"
 import Dropdownv2 from '../components/Dropdownv2';
@@ -89,6 +89,44 @@ const Contact = ({ contact, contactContent, or, name, email, phone, selectPackag
 
   const { t, i18n } = useTranslation();
 
+
+  const isAboveSmallScreens = useMediaQuery("(min-width: 768px)");
+    
+  const ale = () => {
+    if (i18n.language === 'عربي') {
+      alert('تم توجيه النموذج بنجاح!')
+    } else {
+      alert('Form routed Successfully!')
+    }
+  }
+  const onSubmit = async (e) => {
+        let url = ""
+        let message = ""
+        if (i18n.language === 'عربي') {
+          message = "تفاعل جديد من موقع الويب الخاص بك:"+"%0a" +
+            "%0aاسم     = " + e.Name +
+            "%0aعنوان الايميل = " + e.Email +
+            "%0aهاتف    = " + e.Phone +
+            "%0aالحزمة المختارة     = " + selected.name;
+        } else {
+          message = "New Interaction from your Website:%0a%0aName     = " + e.Name +
+            "%0aEmail ID = " + e.Email +
+            "%0aPhone    = " + e.Phone +
+            "%0aPackage     = " + selected.name;
+        }
+        
+        if (isAboveSmallScreens) {
+            url = `https://web.whatsapp.com/send?phone=+966508188743&text=${message}&app_absent=0`
+        } else {
+            url = `https://api.whatsapp.com/send?phone=+966508188743&text=${message}&app_absent=0`
+        }
+        // route.push(url);
+        // e.preventDefault();
+        window.open(url, "_blank");
+        ale()
+        
+    }
+
   // const [selectedValue, setSelectedValue] = useState(null);
 
   // Data
@@ -109,18 +147,19 @@ const Contact = ({ contact, contactContent, or, name, email, phone, selectPackag
   const {
     register,
     trigger,
+    handleSubmit,
     formState: { errors }
   } = useForm();
 
-  const onSubmit = async (e) => {
-    const isValid = await trigger();
-    if (!isValid) {
-      e.preventDefault();
-    }
-  }
+  // const onSubmit = async (e) => {
+  //   const isValid = await trigger();
+  //   if (!isValid) {
+  //     e.preventDefault();
+  //   }
+  // }
 
   return (
-    <section data-section id='contact' className={`py-10 ${i18n.language === 'عربي' ? 'font-reem' : 'font-noto'}`}>
+    <section data-section id='contact' className={`py-10 ${i18n.language === 'Arabic' || 'عربي' ? 'font-reem' : 'font-noto'}`}>
 
       <div className={`mt-24 px-5 md:px-10 py-10 bg-metalic-grey/80 w-full rounded-lg`}>
         <motion.div
@@ -143,19 +182,19 @@ const Contact = ({ contact, contactContent, or, name, email, phone, selectPackag
           {/* {i18n.language === 'عربي' ? setSelected(selected) : setSelected(selected) } */}
           <form
             target="_blank"
-            onSubmit={onSubmit}
-            action="https://formsubmit.co/abdullah@ahattah.com"
+            // onSubmit={onSubmit}
+            // action="https://formsubmit.co/abdullah@ahattah.com"
             method="POST"
           >
             {i18n.language === 'عربي' ? (
               <div className='flex flex-col-reverse justify-center md:flex-row md:space-x-3 text-russian-violet'>
-                <button type="submit" className='mt-5 md:mt-0 rounded mb-3 md:rounded-none md:mb-0 md:rounded-l-lg bg-mettalic-gold px-8 py-1.5'>{submit}</button>
+                <button onClick={handleSubmit(onSubmit)} type="submit" className='mt-5 md:mt-0 rounded mb-3 md:rounded-none md:mb-0 md:rounded-l-lg bg-mettalic-gold px-8 py-1.5'>{submit}</button>
                 
                 <Selector selected={selected} setSelected={setSelected} people={people} />
                 <input type="hidden" name="Selected Package" value={selected.name} 
                         {...register("Package", {
                           required: true,
-                          maxLength: 20,
+                          maxLength: 50,
                         })}
                 />
                 {/* <Dropdownv2/> */}
@@ -165,7 +204,7 @@ const Contact = ({ contact, contactContent, or, name, email, phone, selectPackag
                   placeholder={phone}
                   {...register("Phone", {
                     required: true,
-                    maxLength: 20,
+                    maxLength: 50,
                   })}
                 />
                 <input
@@ -174,7 +213,7 @@ const Contact = ({ contact, contactContent, or, name, email, phone, selectPackag
                   placeholder={email}
                   {...register("Email", {
                     required: true,
-                    maxLength: 20,
+                    maxLength: 50,
                   })}
                 />
                 <input
@@ -183,7 +222,7 @@ const Contact = ({ contact, contactContent, or, name, email, phone, selectPackag
                   placeholder={name}
                   {...register("Name", {
                     required: true,
-                    maxLength: 20,
+                    maxLength: 50,
                   })}
                 />
               </div>
@@ -195,7 +234,7 @@ const Contact = ({ contact, contactContent, or, name, email, phone, selectPackag
                   placeholder={name}
                   {...register("Name", {
                     required: true,
-                    maxLength: 20,
+                    maxLength: 50,
                   })}
                 />
                 <input
@@ -204,7 +243,7 @@ const Contact = ({ contact, contactContent, or, name, email, phone, selectPackag
                   placeholder={email}
                   {...register("Email", {
                     required: true,
-                    maxLength: 20,
+                    maxLength: 50,
                   })}
                 />
                 <input
@@ -213,14 +252,14 @@ const Contact = ({ contact, contactContent, or, name, email, phone, selectPackag
                   placeholder={phone}
                   {...register("Phone", {
                     required: true,
-                    maxLength: 20,
+                    maxLength: 50,
                   })}
                 />
                 <Selector selected={selected} setSelected={setSelected} people={people} />
                 <input type="hidden" name="Selected Package" value={selected.name} 
                         {...register("Package", {
                           required: true,
-                          maxLength: 20,
+                          maxLength: 50,
                         })} 
                 />
                 {/* <Dropdownv2/> */}
@@ -234,7 +273,7 @@ const Contact = ({ contact, contactContent, or, name, email, phone, selectPackag
                         })}
                     /> */}
 
-                <button type="submit" className='mt-5 md:mt-0 rounded mb-3 md:rounded-none md:mb-0 md:rounded-r-lg bg-mettalic-gold px-8 py-1.5'>{submit}</button>
+                <button onClick={handleSubmit(onSubmit)} type="submit" className='mt-5 md:mt-0 rounded mb-3 md:rounded-none md:mb-0 md:rounded-r-lg bg-mettalic-gold px-8 py-1.5'>{submit}</button>
               </div>
             )}
           </form>
