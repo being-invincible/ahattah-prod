@@ -114,6 +114,7 @@ const Contact = ({ val, isDisabled }) => {
 
     const {
         register,
+        reset,
         trigger,
         formState: { errors }
     } = useForm();
@@ -134,9 +135,11 @@ const Contact = ({ val, isDisabled }) => {
             .then(
                 (result) => {
                     if (i18n.language === "عربي") {
+                        reset();
                         alert("تم ارسال طلبك بنجاح.");
                         setLoading(false);
                     } else {
+                        reset();
                         alert("Your request has been sent successfully!");
                         setLoading(false);
                     }

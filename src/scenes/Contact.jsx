@@ -174,9 +174,11 @@ const Contact = ({
       .then(
         (result) => {
           if (i18n.language === "عربي") {
+            reset();
             alert("تم ارسال طلبك بنجاح.");
             setLoading(false);
           } else {
+            reset();
             alert("Your request has been sent successfully!");
             setLoading(false);
           }
@@ -237,6 +239,7 @@ const Contact = ({
 
   const {
     register,
+    reset,
     trigger,
     handleSubmit,
     formState: { errors },
